@@ -10,10 +10,16 @@
     "jsr:@std/path@^1.1.1": "1.1.1",
     "jsr:@ts-morph/common@0.27": "0.27.0",
     "jsr:@ts-morph/ts-morph@26": "26.0.0",
+    "jsr:@ts-morph/ts-morph@26.0.0": "26.0.0",
     "npm:@types/node@*": "22.15.15",
+    "npm:@yellicode/core@*": "1.5.0",
     "npm:@yellicode/core@^1.5.0": "1.5.0",
+    "npm:@yellicode/templating@*": "1.9.0",
     "npm:@yellicode/templating@^1.9.0": "1.9.0",
+    "npm:@yellicode/typescript@*": "1.14.2",
     "npm:@yellicode/typescript@^1.14.2": "1.14.2",
+    "npm:ky@*": "1.8.1",
+    "npm:openapi-typescript@*": "7.8.0_typescript@5.8.3",
     "npm:openapi-typescript@^7.8.0": "7.8.0_typescript@5.8.3"
   },
   "jsr": {
@@ -186,6 +192,9 @@
     },
     "json-schema-traverse@1.0.0": {
       "integrity": "sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug=="
+    },
+    "ky@1.8.1": {
+      "integrity": "sha512-7Bp3TpsE+L+TARSnnDpk3xg8Idi8RwSLdj6CMbNWoOARIrGrbuLGusV0dYwbZOm4bB3jHNxSw8Wk/ByDqJEnDw=="
     },
     "minimatch@5.1.6": {
       "integrity": "sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==",

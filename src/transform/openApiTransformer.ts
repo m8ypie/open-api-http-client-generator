@@ -1,6 +1,6 @@
-import { camelCase, pascalCase } from "https://deno.land/x/case/mod.ts";
-import ky from "ky";
-import openapiTS, { astToString } from "openapi-typescript";
+import { camelCase, pascalCase } from "https://deno.land/x/case@2.2.0/mod.ts";
+import ky from "npm:ky";
+import openapiTS, { astToString } from "npm:openapi-typescript";
 import {
   InterfaceDeclaration,
   Node,
@@ -9,16 +9,16 @@ import {
   SourceFile,
   ts,
   Type,
-} from "ts-morph";
+} from "jsr:@ts-morph/ts-morph@26.0.0";
 
-import { TextWriter } from "@yellicode/core";
-import { Generator, OutputMode } from "@yellicode/templating";
+import { TextWriter } from "npm:@yellicode/core";
+import { Generator, OutputMode } from "npm:@yellicode/templating";
 import {
   FunctionDefinition,
   InterfaceDefinition,
   ParameterDefinition,
   TypeScriptWriter,
-} from "@yellicode/typescript";
+} from "npm:@yellicode/typescript";
 
 const getImportInfo = (fileName:string, importExtension:string, importedMethods:string[] = [], exportedMethods:string[]= [])  => {
   return {
@@ -244,7 +244,6 @@ class PathDef extends OneToManyWriteElement {
         `${pathStr}${methodStr}`,
       );
       if (!methodType || methodType?.isNever() || !pathData) {
-        console.log(methodType?.getText());
         return [];
       }
       return [
@@ -256,8 +255,6 @@ class PathDef extends OneToManyWriteElement {
         ),
       ];
     }));
-
-    // path.getProperties().map();
   }
 }
 
@@ -271,12 +268,10 @@ class ApiMethod {
     private requestInfo: Type<ts.Type>,
     private apiMethod: string,
   ) {
-    // console.log("???????");
     const requestBodyType = tunnel(
       requestInfo,
       "requestBody.content.application/json",
     );
-    // console.log(!!requestBodyType);
     const responseBodyType = tunnel(
       requestInfo,
       "responses",
@@ -285,12 +280,6 @@ class ApiMethod {
     ).find((t) => !!t);
 
     const pathType = tunnel(requestInfo, "parameters.path");
-    console.log(
-      "hererererere",
-      !!requestBodyType,
-      !!responseBodyType,
-      !!pathType,
-    );
     this.response = new Response(methodName, responseBodyType);
 
     this.path = new Path(pathStr, methodName, pathType);
@@ -342,13 +331,6 @@ class ApiMethod {
         });
       },
     });
-    // tw.writeConstDeclaration(functionDef, (w) => {
-    //   w.(
-    //     `return await eBayClient.${this.apiMethod.toLocaleLowerCase()}(${this.path.stringTemplatePath}${
-    //       this.body.exists ? `, {json:body}` : ""
-    //     }).json()`,
-    //   );
-    // });
   }
 }
 
@@ -403,12 +385,9 @@ class ElementWithType {
   }
 
   public write(tw: TypeScriptWriter) {
-    // console.log("hererere");
     if (!this.exists) {
-      // console.log("not writing", this.name);
       return;
     }
-    // console.log("riting", this.name);
     tw.writeInterfaceBlock(this.yelliType!!, (w) => {
       this.yelliType!!.properties?.forEach((prop) => {
         w.writeProperty(prop);
