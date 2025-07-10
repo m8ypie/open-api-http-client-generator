@@ -4,7 +4,9 @@
   "description": "A Deno module to generate HTTP clients from OpenAPI specifications.",
   "exports": "./src/mod.ts",
   "tasks": {
-    "dev": "deno run --watch main.ts"
+    "dev": "deno run --watch main.ts",
+    
+    "deno:prepublish": "deno cache --reload --lock=deno.lock --lock-write main.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",

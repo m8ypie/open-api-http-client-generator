@@ -20,6 +20,7 @@ import {
   TypeScriptWriter,
 } from "@yellicode/typescript";
 import { getDirname } from 'cross-dirname';
+import { clientString } from "./clientString.ts";
 
 const FILE_PATH_LOC = getDirname();
 const getImportInfo = (fileName:string, importExtension:string, importedMethods:string[] = [], exportedMethods:string[]= [])  => {
@@ -214,6 +215,11 @@ export class ApiClient extends OneToManyWriteElement {
   }
 
   writeApiClient() {
+    Generator.generate({outputFile: `./${this.clientFilePath}${httpClientWrapperInfo.generatedImportPath.name}.ts`, outputMode: OutputMode.Overwrite},
+      (output: TextWriter) => {
+        const ts = new TypeScriptWriter(output);
+        ts.write(clientString)
+      })
     Generator.generate(
       {
         outputFile: `./${this.clientFilePath}${this.clientName}.ts`,
@@ -224,7 +230,6 @@ export class ApiClient extends OneToManyWriteElement {
         ts.writeImports(httpClientWrapperInfo.generatedImportPath.relativePathWithFileExtension,httpClientWrapperInfo.generatedImportPath.importedMethods);
         ts.writeLine(httpClientWrapperInfo.generatedImportPath.exportMethodsExpression);
         this.write(ts);
-        Deno.copyFileSync(httpClientWrapperInfo.templatePath.pathFromWorkspace, `${Deno.cwd()}/${this.clientFilePath}${httpClientWrapperInfo.generatedImportPath.pathWithFileExtension}`);
       })
   }
 }
