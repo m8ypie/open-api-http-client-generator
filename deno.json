@@ -13,7 +13,8 @@
     "@yellicode/typescript": "npm:@yellicode/typescript@^1.14.2",
     "openapi-typescript": "npm:openapi-typescript@^7.8.0",
      "ts-morph": "jsr:@ts-morph/ts-morph@^26.0.0",
-     "ky": "https://esm.sh/ky",
-     "open-api-http-client-generator": "./src/mod.ts"
+     "ky": "npm:ky@^1.8.1",
+     "open-api-http-client-generator": "./src/mod.ts",
+     "x/case": "npm:change-case@^5.4.4"
   }
 }

@@ -1,6 +1,6 @@
-import { camelCase, pascalCase } from "https://deno.land/x/case@2.2.0/mod.ts";
-import ky from "npm:ky";
-import openapiTS, { astToString } from "npm:openapi-typescript";
+import { camelCase, pascalCase } from "x/case";
+import ky from "ky";
+import openapiTS, { astToString } from "openapi-typescript";
 import {
   InterfaceDeclaration,
   Node,
@@ -9,16 +9,16 @@ import {
   SourceFile,
   ts,
   Type,
-} from "jsr:@ts-morph/ts-morph@26.0.0";
+} from "ts-morph";
 
-import { TextWriter } from "npm:@yellicode/core";
-import { Generator, OutputMode } from "npm:@yellicode/templating";
+import { TextWriter } from "@yellicode/core";
+import { Generator, OutputMode } from "@yellicode/templating";
 import {
   FunctionDefinition,
   InterfaceDefinition,
   ParameterDefinition,
   TypeScriptWriter,
-} from "npm:@yellicode/typescript";
+} from "@yellicode/typescript";
 
 const getImportInfo = (fileName:string, importExtension:string, importedMethods:string[] = [], exportedMethods:string[]= [])  => {
   return {
