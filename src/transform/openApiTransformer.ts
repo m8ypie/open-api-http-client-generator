@@ -19,7 +19,6 @@ import {
   ParameterDefinition,
   TypeScriptWriter,
 } from "@yellicode/typescript";
-import path from "node:path";
 
 const getImportInfo = (fileName:string, importExtension:string, importedMethods:string[] = [], exportedMethods:string[]= [])  => {
   return {
@@ -119,7 +118,7 @@ export class ApiClient extends OneToManyWriteElement {
       apiName: string;
       clientFilePath: string;
     },
-  ) {
+  ):Promise<ApiClient> {
     const openApiJson = await ky.get<
       {
         paths: Record<
