@@ -19,6 +19,7 @@
     "npm:@yellicode/typescript@*": "1.14.2",
     "npm:@yellicode/typescript@^1.14.2": "1.14.2",
     "npm:change-case@^5.4.4": "5.4.4",
+    "npm:cross-dirname@0.1": "0.1.0",
     "npm:ky@*": "1.8.1",
     "npm:ky@^1.8.1": "1.8.1",
     "npm:openapi-typescript@*": "7.8.0_typescript@5.8.3",
@@ -160,6 +161,9 @@
     "colorette@1.4.0": {
       "integrity": "sha512-Y2oEozpomLn7Q3HFP7dpww7AtMJplbM9lGZP6RDfHqmbeRjiwRg4n6VM6j4KLmRke85uWEI7JqF17f3pqdRA0g=="
     },
+    "cross-dirname@0.1.0": {
+      "integrity": "sha512-+R08/oI0nl3vfPcqftZRpytksBXDzOUveBq/NBVx0sUp1axwzPQrKinNx5yd5sxPu8j1wIy8AfnVQ+5eFdha6Q=="
+    },
     "debug@4.4.1": {
       "integrity": "sha512-KcKCqiftBJcZr++7ykoDIEwSa3XWowTfNPo92BYxjXiyYEVrUQh2aLyhxBCwww+heortUFxEJYcRzosstTEBYQ==",
       "dependencies": [
@@ -293,17 +297,21 @@
     "https://deno.land/x/case@2.2.0/vendor/camelCaseRegexp.ts": "7d9ff02aad4ab6429eeab7c7353f7bcdd6cc5909a8bd3dda97918c8bbb7621ae",
     "https://deno.land/x/case@2.2.0/vendor/camelCaseUpperRegexp.ts": "292de54a698370f90adcdf95727993d09888b7f33d17f72f8e54ba75f7791787",
     "https://deno.land/x/case@2.2.0/vendor/nonWordRegexp.ts": "c1a052629a694144b48c66b0175a22a83f4d61cb40f4e45293fc5d6b123f927e",
+    "https://deno.land/x/cross_dirname@v0.1.0/mod.ts": "5a57604f9bce838d9f87f019bc1f48bd41ff1efadc6160803a5a7b717092cb2d",
+    "https://deno.land/x/cross_dirname@v0.1.0/src/index.ts": "a9d9b33cc950f12d775e79bafd3578de8d49c1e2a56e13a811ed2c50c59560a0",
     "https://esm.sh/ky@1.8.1": "b71513124e31efcf35f921b5831c0afe502a8caec4b93276d1ecca59968b6d7e",
     "https://esm.sh/ky@1.8.1/denonext/ky.mjs": "b9d159536fccfd3348448ba898194c4e0bca9095e7fec22a82cd350f51108ece"
   },
   "workspace": {
     "dependencies": [
       "jsr:@std/assert@1",
+      "jsr:@std/path@^1.1.1",
       "jsr:@ts-morph/ts-morph@26",
       "npm:@yellicode/core@^1.5.0",
       "npm:@yellicode/templating@^1.9.0",
       "npm:@yellicode/typescript@^1.14.2",
       "npm:change-case@^5.4.4",
+      "npm:cross-dirname@0.1",
       "npm:ky@^1.8.1",
       "npm:openapi-typescript@^7.8.0"
     ]

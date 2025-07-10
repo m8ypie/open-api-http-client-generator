@@ -19,14 +19,17 @@ import {
   ParameterDefinition,
   TypeScriptWriter,
 } from "@yellicode/typescript";
+import { getDirname } from 'cross-dirname';
 
+const FILE_PATH_LOC = getDirname();
 const getImportInfo = (fileName:string, importExtension:string, importedMethods:string[] = [], exportedMethods:string[]= [])  => {
+  
   return {
     name: fileName,
     relativePathWithFileExtension: `./${fileName}${importExtension}`,
     relativePath: `./${fileName}`,
     pathWithFileExtension: `${fileName}${importExtension}`,
-    pathFromWorkspace: `${import.meta.dirname}/${fileName}${importExtension}`,
+    pathFromWorkspace: `${FILE_PATH_LOC}/${fileName}${importExtension}`,
     path: fileName,
     importedMethods,
     exportMethodsExpression: exportedMethods.length ? `export { ${exportedMethods.join(", ")} } from "./${fileName}${importExtension}"` : "",
