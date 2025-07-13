@@ -193,7 +193,7 @@ type TransformerOptions = {
 
 type Transformers = Required<TransformerOptions>;
 
-export const generatePlaceholderBody = () => [{
+export const generatePlaceholderBody:() =>BodyTransformProperty[] = () => [{
   typeName: "[x :any]:any",
   name: "unknownBody" + randomString(4),
   isOptional: false,
