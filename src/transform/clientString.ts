@@ -1,9 +1,15 @@
-export const clientString = `type HttpMethod = "get" | "post" | "put" | "patch" | "head" | "delete";
+export const clientString =
+  `type HttpMethod = "get" | "post" | "put" | "patch" | "head" | "delete";
 
 type Processor = {
   request: <B, R>(
     path: string,
-    options: { body?: B; headers?: Record<string, string>; method: HttpMethod },
+    options: {
+      body?: B;
+      headers?: Record<string, string>;
+      method: HttpMethod;
+      searchParams?: any;
+    },
   ) => Promise<R>;
 };
 
@@ -29,9 +35,15 @@ export function initApiClient<B>(processor: Processor) {
 export const httpClient = {
   request<B, R>(
     path: string,
-    options: { body?: B; headers?: Record<string, string>; method: HttpMethod },
+    options: {
+      body?: B;
+      headers?: Record<string, string>;
+      method: HttpMethod;
+      searchParams?: any;
+    },
   ): Promise<R> {
     return processorWrapper.processor.request<B, R>(path, options);
   },
 };
-`
+
+`;

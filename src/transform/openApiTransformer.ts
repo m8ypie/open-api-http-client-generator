@@ -19,12 +19,16 @@ import {
   ParameterDefinition,
   TypeScriptWriter,
 } from "@yellicode/typescript";
-import { getDirname } from 'cross-dirname';
+import { getDirname } from "cross-dirname";
 import { clientString } from "./clientString.ts";
 
 const FILE_PATH_LOC = getDirname();
-const getImportInfo = (fileName:string, importExtension:string, importedMethods:string[] = [], exportedMethods:string[]= [])  => {
-  
+const getImportInfo = (
+  fileName: string,
+  importExtension: string,
+  importedMethods: string[] = [],
+  exportedMethods: string[] = [],
+) => {
   return {
     name: fileName,
     relativePathWithFileExtension: `./${fileName}${importExtension}`,
@@ -33,14 +37,20 @@ const getImportInfo = (fileName:string, importExtension:string, importedMethods:
     pathFromWorkspace: `${FILE_PATH_LOC}/${fileName}${importExtension}`,
     path: fileName,
     importedMethods,
-    exportMethodsExpression: exportedMethods.length ? `export { ${exportedMethods.join(", ")} } from "./${fileName}${importExtension}"` : "",
-  }
-}
+    exportMethodsExpression: exportedMethods.length
+      ? `export { ${
+        exportedMethods.join(", ")
+      } } from "./${fileName}${importExtension}"`
+      : "",
+  };
+};
 
 const httpClientWrapperInfo = {
-  templatePath: getImportInfo("apiClientTemplate",".ts"),
-  generatedImportPath: getImportInfo("httpClient",".ts", ["httpClient"], [ "initApiClient"]),
-}
+  templatePath: getImportInfo("apiClientTemplate", ".ts"),
+  generatedImportPath: getImportInfo("httpClient", ".ts", ["httpClient"], [
+    "initApiClient",
+  ]),
+};
 
 const tunnel = (
   s: Type<ts.Type> | undefined,
@@ -122,7 +132,7 @@ export class ApiClient extends OneToManyWriteElement {
       apiName: string;
       clientFilePath: string;
     },
-  ):Promise<ApiClient> {
+  ): Promise<ApiClient> {
     const openApiJson = await ky.get<
       {
         paths: Record<
@@ -215,11 +225,14 @@ export class ApiClient extends OneToManyWriteElement {
   }
 
   writeApiClient() {
-    Generator.generate({outputFile: `./${this.clientFilePath}${httpClientWrapperInfo.generatedImportPath.name}.ts`, outputMode: OutputMode.Overwrite},
-      (output: TextWriter) => {
-        const ts = new TypeScriptWriter(output);
-        ts.write(clientString)
-      })
+    Generator.generate({
+      outputFile:
+        `./${this.clientFilePath}${httpClientWrapperInfo.generatedImportPath.name}.ts`,
+      outputMode: OutputMode.Overwrite,
+    }, (output: TextWriter) => {
+      const ts = new TypeScriptWriter(output);
+      ts.write(clientString);
+    });
     Generator.generate(
       {
         outputFile: `./${this.clientFilePath}${this.clientName}.ts`,
@@ -227,10 +240,17 @@ export class ApiClient extends OneToManyWriteElement {
       },
       (output: TextWriter) => {
         const ts = new TypeScriptWriter(output);
-        ts.writeImports(httpClientWrapperInfo.generatedImportPath.relativePathWithFileExtension,httpClientWrapperInfo.generatedImportPath.importedMethods);
-        ts.writeLine(httpClientWrapperInfo.generatedImportPath.exportMethodsExpression);
+        ts.writeImports(
+          httpClientWrapperInfo.generatedImportPath
+            .relativePathWithFileExtension,
+          httpClientWrapperInfo.generatedImportPath.importedMethods,
+        );
+        ts.writeLine(
+          httpClientWrapperInfo.generatedImportPath.exportMethodsExpression,
+        );
         this.write(ts);
-      })
+      },
+    );
   }
 }
 
@@ -270,6 +290,7 @@ class ApiMethod {
   private body: Body;
   private response: Response;
   private path: Path;
+  private queryParams: QueryParams;
   constructor(
     private pathStr: string,
     private methodName: string,
@@ -288,17 +309,21 @@ class ApiMethod {
     ).find((t) => !!t);
 
     const pathType = tunnel(requestInfo, "parameters.path");
+    const paramType = tunnel(requestInfo, "parameters.query");
     this.response = new Response(methodName, responseBodyType);
 
     this.path = new Path(pathStr, methodName, pathType);
 
     this.body = new Body(methodName, requestBodyType);
+    this.queryParams = new QueryParams(methodName, paramType);
   }
 
   public write(tw: TypeScriptWriter) {
     this.body.write(tw);
     tw.writeLine();
     this.path.write(tw);
+    tw.writeLine();
+    this.queryParams.write(tw);
     tw.writeLine();
     this.response.write(tw);
     tw.writeLine();
@@ -309,6 +334,7 @@ class ApiMethod {
     const parameters: ParameterDefinition[] = [
       ...this.path.getParameterDefMap(() => this.path.unrolledValue),
       ...this.body.getParameterDefMap(() => "body"),
+      ...this.queryParams.getParameterDefMap(() => "searchParams"),
     ];
     const functionDef: FunctionDefinition = {
       name: "",
@@ -329,6 +355,7 @@ class ApiMethod {
         w.write("async ").writeFunctionBlock(functionDef, (fw) => {
           const args = [
             this.body.exists && "body",
+            this.queryParams.exists && "searchParams",
             `method: "${this.apiMethod.toLocaleLowerCase()}"`,
           ].filter((t) => t);
           fw.write(
@@ -361,7 +388,11 @@ class ElementWithType {
     if (!this.exists) {
       return undefined;
     }
-    return { name: name(), typeName: this.yelliType!!.name!! };
+    return {
+      name: name(),
+      typeName: this.yelliType!!.name!!,
+      isOptional: this.isOptional(),
+    };
   }
 
   getParameterDefMap(name: () => string): ParameterDefinition[] {
@@ -403,6 +434,9 @@ class ElementWithType {
       });
     });
   }
+  protected isOptional(): boolean {
+    return false;
+  }
 }
 
 class Response extends ElementWithType {
@@ -420,6 +454,22 @@ class Body extends ElementWithType {
     private bodyType?: Type<ts.Type>,
   ) {
     super(pascalCase(`${apiMethodName}Body`), bodyType);
+  }
+}
+
+class QueryParams extends ElementWithType {
+  protected override isOptional(): boolean {
+    return true;
+  }
+  constructor(
+    private apiMethodName: string,
+    private bodyType?: Type<ts.Type>,
+  ) {
+    super(pascalCase(`${apiMethodName}QueryParams`), bodyType);
+  }
+
+  override _exists(): boolean {
+    return !!this.bodyType?.getProperties().length;
   }
 }
 
